@@ -88,12 +88,12 @@
          (let ([v (eval-under-env (fst-e e) env)])
            (if (apair? v)
                (apair-e1 v)
-               '()))]
+               (error (format "bad MUPL expression for fst expression. Expected apair, Found: ~e" v))))]
         [(snd? e)
          (let ([v (eval-under-env (snd-e e) env)])
            (if (apair? v)
                (apair-e2 v)
-               '()))]
+               (error (format "bad MUPL expression for snd expression. Expected Closure, Found: ~e" v))))]
         [(isaunit? e)
          (let ([v (eval-under-env (isaunit-e e) env)])
            (int (if (aunit? v) 1 0)))]
@@ -113,7 +113,7 @@
 
 (define (mlet* lstlst e2)
   (if (cons? lstlst)
-      (mlet* (cdr lstlst) (mlet (caar lstlst) (cdar lstlst) e2))
+      (mlet (caar lstlst) (cdar lstlst) (mlet* (cdr lstlst) e2))
       e2))
 
 (define (ifeq e1 e2 e3 e4)
